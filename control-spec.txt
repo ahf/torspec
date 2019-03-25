@@ -3286,13 +3286,27 @@
 4.1.28. Pluggable Transport Logs
 
    Syntax:
-      "650" SP "PT_LOG" SP PT=Program SP Message
+      "650" SP "PT_LOG" SP Message
 
-      Program = The program path as defined in the *TransportPlugin
-                configuration option. Tor accepts relative and full path.
-      Message = The log message that the PT sends back to the tor parent
+      Message = The log message that the PT sends back to the Tor parent
                 process minus the "LOG" string prefix. Formatted as
-                specified in pt-spec.txt section 3.3.4.
+                specified in pt-spec.txt section 3.3.4 using the key/value
+                encoding specified in pt-spec.txt section 3.3.5.
+
+                The following keys are defined for the LOG message:
+
+                  PT (string)      = A string containing the path to the
+                                     executable that is emitting the current
+                                     log message.
+
+                  MESSAGE (string) = A string containing the log message in
+                                     a human readable format.
+
+                  SEVERITY (enum)  = Can be one of the following strings:
+                                     error, warning, notice, info, debug.
+
+                Please note that the order of the key/value pairs is an
+                implementation detail.
 
    This event is triggered when tor receives a log message from the PT.
 
@@ -3319,7 +3333,11 @@
                 process minus the "STATUS" string prefix. Formatted as
                 specified in pt-spec.txt section 3.3.5.
 
-   This event is triggered when tor receives a log message from the PT.
+   This event is triggered when Tor receives a STATUS message from the PT.
+
+   Currently no PT specific STATUS messages are defined and this message can
+   thus safely be ignored. In the future we will specify concrete message
+   structures for the different PT implementations that are available.
 
    Example:
 
