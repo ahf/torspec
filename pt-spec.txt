@@ -28,6 +28,8 @@ Table of Contents
            3.3.3. Pluggable Transport Server Messages
       3.4. Pluggable Transport Shutdown
       3.5. Pluggable Transport Client Per-Connection Arguments
+      3.6. Pluggable Transport Feature Extensions
+           3.6.1. Dormant Signals
    4. Anonymity Considerations
    5 References
    6. Acknowledgments
@@ -455,6 +457,44 @@ Table of Contents
 
          ENV-ERROR No TOR_PT_AUTH_COOKIE_FILE when TOR_PT_EXTENDED_SERVER_PORT set
 
+   Once the Pluggable Transport Specification version have been successfully
+   negotiated, all PT proxies SHOULD announce their supported set of feature
+   flags.
+
+   The parent process of the PT proxy can announce its supported set of
+   features using the "FEATURES" message that is written to the PT
+   proxy's standard input. The "FEATURES" message takes a single
+   argument, which is a comma-separated list of supported features.
+
+   The PT proxy SHOULD respond to the "FEATURES" message using the
+   "FEATURES-ACK" message containing a comma-separated list of mutually
+   supported features based on the parent process' set of supported
+   features.
+
+   A feature name MUST satisfy the regular expression:
+
+       "[a-zA-Z_][a-zA-Z0-9_]*".
+
+   The list of available feature flags are listed here:
+
+       "dormant": This flag indicates that the PT is able to handle entering
+                  and leaving a dormant state, that is used to reduce resource
+                  utilization in, for example, mobile environments. See
+                  section 3.6.1 for more information about the dormant feature
+                  flag.
+
+    Example message from parent process to PT proxy:
+
+         FEATURES dormant,x,y
+
+    Example response from PT proxy to parent proxy:
+
+         FEATURES-ACK dormant,y
+
+    The parent process is now able to use both the "dormant" and the "y"
+    feature, but the PT proxy have indicated that it does NOT support
+    the "x" feature.
+
 3.3.2. Pluggable Transport Client Messages
 
    After negotiating the Pluggable Transport Specification version,
@@ -712,6 +752,58 @@ Table of Contents
       If the encoded argument list is less than 255 bytes in
       length, the "PLEN" field must be set to "1" and the "PASSWD"
       field must contain a single NUL character.
+
+3.6. Pluggable Transport Feature Extensions
+
+   This section contains information about how to implement different
+   feature extensions that have been negotiated between the parent
+   process and the PT process. See section 3.3.1 for more information
+   about the negotiation process.
+
+3.6.1. Dormant Signals
+
+    The dormant feature is a method for the parent process of the PT
+    proxy to notify the PT proxy that it should enter a less resource
+    conserving state. This includes that the PT proxy should try its
+    best to minimize CPU utilization, wake-ups from the CPU (often
+    caused by timer triggers), and network connectivity that is not
+    needed to keep its currently active set of connections alive.
+
+    When the parent process of the PT proxy wants the PT proxy to enter
+    the dormant state it will write the "SIGNAL DORMANT-ENTER" message
+    on the PT proxies' standard input. The PT proxy will acknowledge the
+    message using the "SIGNAL DORMANT-ENTER-DONE" message.
+
+    The parent process will also notify the PT proxy when its time to
+    leave the dormant state. This is done using the "SIGNAL
+    DORMANT-EXIT" message from the parent process to the PT proxy.
+    The PT proxy should acknowledge the message using the "SIGNAL
+    DORMANT-EXIT-DONE" message.
+
+    Example message flow between parent process and PT proxy after the
+    "dormant" feature flag have been negotiated (see section 3.3.1):
+
+        (parent process to PT proxy)
+        SIGNAL DORMANT-ENTER
+
+    The PT proxy MUST acknowledge the request using:
+
+        (PT proxy to parent process)
+        SIGNAL DORMANT-ENTER-DONE
+
+    The PT proxy SHOULD enter a less resource conserving state. Once the
+    parent process leaves its own dormant state it will announce it to
+    the PT proxy:
+
+        (parent process to PT proxy)
+        SIGNAL DORMANT-EXIT
+
+    The PT proxy MUST acknowledge the request using:
+
+        (PT proxy to parent process)
+        SIGNAL DORMANT-EXIT-DONE
+
+    The dormant PT extension have been part of Tor since version XXX.
 
 4. Anonymity Considerations
 
