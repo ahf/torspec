@@ -235,7 +235,7 @@ Table of Contents
        The PT proxy can now assume that the "dormant" and the "x" feature
        extension is supported by the parent process.
 
-       The list of available feature flags are listed here:
+       The list of available feature extensions:
 
          "dormant": This flag indicates that the PT proxy is able to handle entering
                     and leaving a dormant state, that is used to reduce resource
