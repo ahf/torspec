@@ -218,6 +218,31 @@ Table of Contents
 
          TOR_PT_EXIT_ON_STDIN_CLOSE=1
 
+     "TOR_PT_FEATURES"
+
+       Specifies a comma-separated list of the names of supported feature
+       extension. A single feature extension name MUST satisfy the regular expression:
+
+           "[a-zA-Z_][a-zA-Z0-9_]*".
+
+       If no feature extensions are supported by the parent process this
+       variable SHOULD be left empty.
+
+       Example:
+
+         TOR_PT_FEATURES=dormant,x
+
+       The PT proxy can now assume that the "dormant" and the "x" feature
+       extension is supported by the parent process.
+
+       The list of available feature flags are listed here:
+
+         "dormant": This flag indicates that the PT proxy is able to handle entering
+                    and leaving a dormant state, that is used to reduce resource
+                    utilization in, for example, mobile environments. See
+                    section 3.6.1 for more information about the dormant feature
+                    extension.
+
 3.2.2. Pluggable Transport Client Environment Variables
 
    Client-side Pluggable Transport forward proxies are configured
@@ -432,7 +457,7 @@ Table of Contents
 
          VERSION 1
 
-   After version negotiation has been completed the PT proxy must
+   After version negotiation has been completed the PT proxy MUST
    then validate that all of the required environment variables are
    provided, and that all of the configuration values supplied are
    well formed.
@@ -457,43 +482,24 @@ Table of Contents
 
          ENV-ERROR No TOR_PT_AUTH_COOKIE_FILE when TOR_PT_EXTENDED_SERVER_PORT set
 
-   Once the Pluggable Transport Specification version have been successfully
-   negotiated, all PT proxies SHOULD announce their supported set of feature
-   flags.
+   The PT proxy SHOULD announce its own set of supported feature extensions to the
+   parent process during its startup, but only if the "TOR_PT_FEATURES"
+   environment variable is present. See section 3.2.1 for information about the
+   "TOR_PT_FEATURES" environment variable.
 
-   The parent process of the PT proxy can announce its supported set of
-   features using the "FEATURES" message that is written to the PT
-   proxy's standard input. The "FEATURES" message takes a single
-   argument, which is a comma-separated list of supported features.
+   The PT proxy announces its own set of feature extensions by writing "FEATURES
+   dormant,x,y,z" to the parent process' standard input. The PT proxy MUST only
+   write the FEATURES message a once during the lifetime of the PT proxy process.
+   The "FEATURES" message SHOULD only be written if one or more feature extensions
+   are supported by the PT proxy.
 
-   The PT proxy SHOULD respond to the "FEATURES" message using the
-   "FEATURES-ACK" message containing a comma-separated list of mutually
-   supported features based on the parent process' set of supported
-   features.
+       Example:
 
-   A feature name MUST satisfy the regular expression:
+         (PT proxy to the parent process)
+         FEATURES dormant,x
 
-       "[a-zA-Z_][a-zA-Z0-9_]*".
-
-   The list of available feature flags are listed here:
-
-       "dormant": This flag indicates that the PT is able to handle entering
-                  and leaving a dormant state, that is used to reduce resource
-                  utilization in, for example, mobile environments. See
-                  section 3.6.1 for more information about the dormant feature
-                  flag.
-
-    Example message from parent process to PT proxy:
-
-         FEATURES dormant,x,y
-
-    Example response from PT proxy to parent proxy:
-
-         FEATURES-ACK dormant,y
-
-    The parent process is now able to use both the "dormant" and the "y"
-    feature, but the PT proxy have indicated that it does NOT support
-    the "x" feature.
+   The parent process MAY now make use of both the "dormant" and "x" feature
+   extension.
 
 3.3.2. Pluggable Transport Client Messages
 
