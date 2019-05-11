@@ -29,7 +29,7 @@ Table of Contents
       3.4. Pluggable Transport Shutdown
       3.5. Pluggable Transport Client Per-Connection Arguments
       3.6. Pluggable Transport Feature Extensions
-           3.6.1. Dormant Signals
+           3.6.1. Dormant State
    4. Anonymity Considerations
    5 References
    6. Acknowledgments
@@ -760,7 +760,7 @@ Table of Contents
    process and the PT process. See section 3.3.1 for more information
    about the negotiation process.
 
-3.6.1. Dormant Signals
+3.6.1. Dormant State
 
     The dormant feature is a method for the parent process of the PT
     proxy to notify the PT proxy that it should enter a less resource
@@ -769,39 +769,38 @@ Table of Contents
     caused by timer triggers), and network connectivity that is not
     needed to keep its currently active set of connections alive.
 
-    When the parent process of the PT proxy wants the PT proxy to enter
-    the dormant state it will write the "SIGNAL DORMANT-ENTER" message
-    on the PT proxies' standard input. The PT proxy will acknowledge the
-    message using the "SIGNAL DORMANT-ENTER-DONE" message.
+    When the parent process of the PT proxy wants the PT proxy to enter the
+    dormant state it will write the "DORMANT ENTER" message on the PT
+    proxies' standard input. The PT proxy SHOULD acknowledge the message using
+    the "DORMANT ENTER" message.
 
     The parent process will also notify the PT proxy when its time to
-    leave the dormant state. This is done using the "SIGNAL
-    DORMANT-EXIT" message from the parent process to the PT proxy.
-    The PT proxy should acknowledge the message using the "SIGNAL
-    DORMANT-EXIT-DONE" message.
+    leave the dormant state. This is done using the "DORMANT EXIT"
+    message from the parent process to the PT proxy. The PT proxy SHOULD
+    acknowledge the message using the "DORMANT EXIT" message.
 
     Example message flow between parent process and PT proxy after the
     "dormant" feature flag have been negotiated (see section 3.3.1):
 
         (parent process to PT proxy)
-        SIGNAL DORMANT-ENTER
+        DORMANT ENTER
 
     The PT proxy MUST acknowledge the request using:
 
         (PT proxy to parent process)
-        SIGNAL DORMANT-ENTER-DONE
+        DORMANT ENTER
 
     The PT proxy SHOULD enter a less resource conserving state. Once the
     parent process leaves its own dormant state it will announce it to
     the PT proxy:
 
         (parent process to PT proxy)
-        SIGNAL DORMANT-EXIT
+        DORMANT EXIT
 
     The PT proxy MUST acknowledge the request using:
 
         (PT proxy to parent process)
-        SIGNAL DORMANT-EXIT-DONE
+        DORMANT EXIT
 
     The dormant PT extension have been part of Tor since version XXX.
 
