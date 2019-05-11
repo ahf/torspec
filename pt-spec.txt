@@ -802,6 +802,17 @@ Table of Contents
         (PT proxy to parent process)
         DORMANT EXIT
 
+    The PT proxy SHOULD respond to each individual "DORMANT ENTER" or "DORMANT
+    EXIT" message it receives in the order they are received. For example: if the
+    PT proxy receives a "DORMANT ENTER" immediately followed by a "DORMANT EXIT" it
+    should respond to both messages in order with "DORMANT ENTER" and then "DORMANT
+    EXIT".
+
+    The parent process MUST NOT send a "DORMANT EXIT" message without first having
+    send a "DORMANT ENTER" message. The parent process MUST NOT send the PT proxy a
+    "DORMANT EXIT" message before the PT proxy have been told to enter dormant
+    state using a "DORMANT ENTER" message.
+
     The dormant PT extension have been part of Tor since version XXX.
 
 4. Anonymity Considerations
