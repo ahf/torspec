@@ -785,7 +785,7 @@ Table of Contents
         (parent process to PT proxy)
         DORMANT ENTER
 
-    The PT proxy MUST acknowledge the request using:
+    The PT proxy SHOULD acknowledge the request by responding with:
 
         (PT proxy to parent process)
         DORMANT ENTER
@@ -797,7 +797,7 @@ Table of Contents
         (parent process to PT proxy)
         DORMANT EXIT
 
-    The PT proxy MUST acknowledge the request using:
+    The PT proxy SHOULD acknowledge the request by responding with:
 
         (PT proxy to parent process)
         DORMANT EXIT
