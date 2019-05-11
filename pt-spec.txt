@@ -487,11 +487,11 @@ Table of Contents
    environment variable is present. See section 3.2.1 for information about the
    "TOR_PT_FEATURES" environment variable.
 
-   The PT proxy announces its own set of feature extensions by writing "FEATURES
-   dormant,x,y,z" to the parent process' standard input. The PT proxy MUST only
-   write the FEATURES message a once during the lifetime of the PT proxy process.
-   The "FEATURES" message SHOULD only be written if one or more feature extensions
-   are supported by the PT proxy.
+   The PT proxy announces its own set of feature extensions by writing
+   "FEATURES dormant,x,y,z" to its own standard output. The PT proxy MUST
+   only write the FEATURES message a once during the lifetime of the PT
+   proxy process. The "FEATURES" message SHOULD only be written if one or
+   more feature extensions are supported by the PT proxy.
 
        Example:
 
