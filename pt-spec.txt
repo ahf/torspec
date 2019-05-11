@@ -237,11 +237,11 @@ Table of Contents
 
        The list of available feature extensions:
 
-         "dormant": This flag indicates that the PT proxy is able to handle entering
-                    and leaving a dormant state, that is used to reduce resource
-                    utilization in, for example, mobile environments. See
-                    section 3.6.1 for more information about the dormant feature
-                    extension.
+         "dormant": This flag indicates that the PT proxy is able to handle
+                    entering and leaving dormant state. Dormant state is
+                    used to reduce resource utilization in, for example, mobile
+                    environments. See section 3.6.1 for more information
+                    about the dormant feature extension.
 
 3.2.2. Pluggable Transport Client Environment Variables
 
