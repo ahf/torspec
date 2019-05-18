@@ -226,7 +226,7 @@ Table of Contents
            "[a-zA-Z_][a-zA-Z0-9_]*".
 
        If no feature extensions are supported by the parent process this
-       variable SHOULD be left empty.
+       variable SHOULD be set to the empty string.
 
        Example:
 
@@ -483,15 +483,12 @@ Table of Contents
          ENV-ERROR No TOR_PT_AUTH_COOKIE_FILE when TOR_PT_EXTENDED_SERVER_PORT set
 
    The PT proxy SHOULD announce its own set of supported feature extensions to the
-   parent process during its startup, but only if the "TOR_PT_FEATURES"
-   environment variable is present. See section 3.2.1 for information about the
-   "TOR_PT_FEATURES" environment variable.
-
-   The PT proxy announces its own set of feature extensions by writing
-   "FEATURES dormant,x,y,z" to its own standard output. The PT proxy MUST
-   only write the FEATURES message once during the lifetime of the PT
-   proxy process. The "FEATURES" message MUST only be written if at
-   least one or more feature extensions are supported by the PT proxy.
+   parent process during its startup. The PT proxy announces its own set of
+   feature extensions by writing "FEATURES dormant,x,y,z" to its own standard
+   output. The PT proxy SHOULD only announce its set feature extensions to the
+   parent process once and the parent process MUST ignore any "FEATURES" messages
+   after the first one. The "FEATURES" message MUST only be written if at least
+   one feature extension is supported by the PT proxy.
 
        Example:
 
@@ -769,7 +766,7 @@ Table of Contents
 3.6.1. Dormant State
 
     The dormant feature is a method for the parent process of the PT
-    proxy to notify the PT proxy that it should enter a less resource
+    proxy to notify the PT proxy that it should enter a more resource
     conserving state. This includes that the PT proxy should try its
     best to minimize CPU utilization, wake-ups from the CPU (often
     caused by timer triggers), and network connectivity that is not
