@@ -22,7 +22,7 @@ Table of Contents
            3.2.1. Common Environment Variables
            3.2.2. Pluggable Transport Client Environment Variables
            3.2.3. Pluggable Transport Server Environment Variables
-      3.3. Pluggable Transport To Parent Process Communication
+      3.3. Interprocess Communication
            3.3.1. Common Messages
            3.3.2. Pluggable Transport Client Messages
            3.3.3. Pluggable Transport Server Messages
@@ -392,10 +392,11 @@ Table of Contents
 
          TOR_PT_AUTH_COOKIE_FILE=/var/lib/tor/extended_orport_auth_cookie
 
-3.3. Pluggable Transport To Parent Process Communication
+3.3. Interprocess Communication
 
-   All Pluggable Transport Proxies communicate to the parent process
-   via writing NL-terminated lines to stdout.  The line metaformat is:
+   All Pluggable Transport Proxies and parent processes communicates with the
+   opposite side by writing NL-terminated lines to stdout.  The line metaformat
+   is:
 
      <Line> ::= <Keyword> <OptArgs> <NL>
      <Keyword> ::= <KeywordChar> | <Keyword> <KeywordChar>
@@ -406,7 +407,7 @@ Table of Contents
      <SP> ::= <US-ASCII whitespace symbol (32)>
      <NL> ::= <US-ASCII newline (line feed) character (10)>
 
-   The parent process MUST ignore lines received from PT proxies with
+   Both processes MUST ignore lines received from the opposite side with
    unknown keywords.
 
 3.3.1. Common Messages
